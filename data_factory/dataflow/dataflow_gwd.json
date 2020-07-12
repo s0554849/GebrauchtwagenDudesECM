@@ -9,12 +9,25 @@
 						"referenceName": "carsCSV",
 						"type": "DatasetReference"
 					},
-					"name": "Cars"
+					"name": "car"
 				}
 			],
 			"sinks": [],
-			"transformations": [],
-			"script": "source(output(\n\t\tColumn_1 as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: true) ~> Cars"
+			"transformations": [
+				{
+					"name": "preisrange"
+				},
+				{
+					"name": "kmrange"
+				},
+				{
+					"name": "splitTuer"
+				},
+				{
+					"name": "AlterRow1"
+				}
+			],
+			"script": "source(output(\n\t\tid as string,\n\t\tanzahl_sitze as integer,\n\t\terstzulassung as integer,\n\t\tfarbe as string,\n\t\tfeinstaubplakette as string,\n\t\tgetriebe as string,\n\t\thubraum as integer,\n\t\tkarosserieform as string,\n\t\tkm as integer,\n\t\tkraftstoff as string,\n\t\tleistung_ps as integer,\n\t\tmarke as string,\n\t\tmodell as string,\n\t\tpreis as double,\n\t\tschadstoffklasse as string,\n\t\ttueren as integer\n\t),\n\tallowSchemaDrift: false,\n\tvalidateSchema: false) ~> car\ncar filter(preis<25000) ~> preisrange\npreisrange filter(km<300000) ~> kmrange\nkmrange split(tueren==0,\n\tdisjoint: false) ~> splitTuer@(tuer 0, tuer nicht 0)\nsplitTuer@tuer 0 alterRow(updateIf(tueren==0)) ~> AlterRow1"
 		}
 	}
 }
