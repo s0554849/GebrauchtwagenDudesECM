@@ -1,0 +1,20 @@
+{
+	"name": "dataflow_gwd",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "carsCSV",
+						"type": "DatasetReference"
+					},
+					"name": "Cars"
+				}
+			],
+			"sinks": [],
+			"transformations": [],
+			"script": "source(output(\n\t\tColumn_1 as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: true) ~> Cars"
+		}
+	}
+}
